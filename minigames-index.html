@@ -1,0 +1,169 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Surprise!</title>
+      <style>
+          body {
+              font-family: 'Segoe UI', sans-serif;
+              background-color: #1e1e1e;
+              color: #ffffff;
+              margin: 0;
+              padding: 0;
+          }
+          .container {
+              max-width: 300px;
+              margin: 20px auto;
+              padding: 20px;
+              background-color: #2d2d2d;
+              border-radius: 5px;
+          }
+          .minigame {
+              margin-top: 20px;
+              padding: 10px;
+              background-color: #3d3d3d;
+              border-radius: 5px;
+          }
+          .ad {
+              margin-top: 20px;
+              padding: 10px;
+              background-color: #5d5d5d;
+              border-radius: 5px;
+              text-align: center;
+              cursor: pointer;
+          }
+          #duckGame {
+              width: 100%;
+              height: 200px;
+              background-color: #87CEEB;
+              position: relative;
+              overflow: hidden;
+          }
+          .duck {
+              width: 30px;
+              height: 30px;
+              background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10C27.9 10 10 27.9 10 50s17.9 40 40 40 40-17.9 40-40S72.1 10 50 10zm0 75c-19.3 0-35-15.7-35-35s15.7-35 35-35 35 15.7 35 35-15.7 35-35 35z" fill="yellow"/><circle cx="65" cy="35" r="5" fill="black"/><path d="M40 60s5 10 20 10 20-10 20-10" stroke="orange" stroke-width="3" fill="none"/></svg>');
+              background-size: cover;
+              position: absolute;
+              cursor: pointer;
+          }
+          #memoryGame {
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              gap: 5px;
+              margin-top: 10px;
+          }
+          .memoryCard {
+              width: 50px;
+              height: 50px;
+              background-color: #4a4a4a;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 24px;
+              cursor: pointer;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="container">
+          <div class="minigame">
+              <h3>Guess the Number</h3>
+              <p>Guess a number between 1 and 10:</p>
+              <input type="number" id="guessInput" min="1" max="10">
+              <button onclick="openRickroll()">Submit Guess</button>
+              <p id="guessResult"></p>
+          </div>
+          <div class="minigame">
+              <h3>Duck Hunt</h3>
+              <div id="duckGame"></div>
+              <p>Score: <span id="duckScore">0</span></p>
+          </div>
+          <div class="minigame">
+              <h3>Memory Game</h3>
+              <div id="memoryGame"></div>
+              <p>Matches: <span id="memoryScore">0</span></p>
+          </div>
+          <div class="ad" onclick="openRickroll()">
+              <h3>Hot Singles in Your Area!</h3>
+              <p>Click here to meet them now!</p>
+          </div>
+      </div>
+      <script>
+          function openRickroll() {
+              window.open("https://www.youtube.com/watch?v=xvFZjo5PgG0", "_blank");
+          }
+
+          // Duck Hunt Game
+          const duckGame = document.getElementById('duckGame');
+          const duckScore = document.getElementById('duckScore');
+          let score = 0;
+
+          function createDuck() {
+              const duck = document.createElement('div');
+              duck.classList.add('duck');
+              duck.style.left = Math.random() * (duckGame.offsetWidth - 30) + 'px';
+              duck.style.top = Math.random() * (duckGame.offsetHeight - 30) + 'px';
+              duck.onclick = openRickroll;
+              duckGame.appendChild(duck);
+
+              animateDuck(duck);
+          }
+
+          function animateDuck(duck) {
+              let x = parseInt(duck.style.left);
+              let y = parseInt(duck.style.top);
+              const dx = Math.random() * 4 - 2;
+              const dy = Math.random() * 4 - 2;
+
+              function move() {
+                  x += dx;
+                  y += dy;
+                  if (x < 0 || x > duckGame.offsetWidth - 30) x -= dx * 2;
+                  if (y < 0 || y > duckGame.offsetHeight - 30) y -= dy * 2;
+                  duck.style.left = x + 'px';
+                  duck.style.top = y + 'px';
+                  requestAnimationFrame(move);
+              }
+
+              move();
+          }
+
+          for (let i = 0; i < 3; i++) {
+              createDuck();
+          }
+
+          // Memory Game
+          const memoryGame = document.getElementById('memoryGame');
+          const memoryScore = document.getElementById('memoryScore');
+          const emojis = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+          let cards = [...emojis, ...emojis];
+          let flippedCards = [];
+          let matches = 0;
+
+          function shuffleArray(array) {
+              for (let i = array.length - 1; i > 0; i--) {
+                  const j = Math.floor(Math.random() * (i + 1));
+                  [array[i], array[j]] = [array[j], array[i]];
+              }
+          }
+
+          function createMemoryGame() {
+              shuffleArray(cards);
+              for (let i = 0; i < cards.length; i++) {
+                  const card = document.createElement('div');
+                  card.classList.add('memoryCard');
+                  card.dataset.value = cards[i];
+                  card.onclick = openRickroll;
+                  memoryGame.appendChild(card);
+              }
+          }
+
+          createMemoryGame();
+
+          // Make everything clickable
+          document.body.addEventListener('click', openRickroll);
+      </script>
+  </body>
+  </html>
